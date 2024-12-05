@@ -1,4 +1,3 @@
-
 # Guardrails Implementation in Generative AI Apps
 
 This project demonstrates the implementation of Google’s Perspective API as a guardrail in a generative AI-powered translation application. The application utilizes OpenAI's GPT-3.5-turbo for language translation, with content moderation applied to ensure responsible outputs.
@@ -18,28 +17,25 @@ Before running this project, ensure you have the following:
 ## Files Overview
 - **`replication.py`**: 
   - The main Python file containing the Streamlit application with the Perspective API guardrail installed.
-  - Allows users to interact with the translation system and observe content moderation in action.
-  - Users can adjust the moderation threshold within this file to experiment with different levels of sensitivity.
+  - Users can adjust the perspective api threshold within this file to experiment with different levels of sensitivity.
 - **`test_data.ipynb`**: 
   - A Jupyter notebook containing a manually created dataset for testing.
-  - Includes prompts and their associated labels to evaluate the performance of the guardrail system.
-  - Prompts can be customized, allowing users to test alternative inputs for diverse scenarios.
+  - Includes prompts and their associated labels to evaluate the performance of the guardrail system..
 - **`old_app.py`**: 
   - A deprecated version of the application, showing the original implementation without the updated guardrail system.
-  - Useful for comparing performance or exploring legacy functionality.
 
 ## Running the Application
 To launch the application, use the following command:
 ```bash
 streamlit run replication.py
 ```
-This will start a Streamlit server, allowing you to interact with the application in your web browser.
+This will start a Streamlit server, allowing you to interact with the application(translator) in your web browser.
 
 ## Adjusting Thresholds
 The moderation threshold for Google’s Perspective API can be adjusted in `replication.py`. Locate the `threshold` variable in the `check_profanity_perspective` function and modify its value to test different sensitivity levels:
 ```python
-# Example threshold adjustment
-threshold = 0.3  # Change to your preferred value
+# change to your preferred value
+threshold = 0.3 
 ```
 
 ## Dataset
