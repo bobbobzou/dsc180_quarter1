@@ -21,30 +21,50 @@ def check_profanity_perspective(text):
     data = {
         "comment": {"text": text},
         "languages": ["en"],
-        "requestedAttributes": {"TOXICITY": {}}
+        "requestedAttributes": {
+            "TOXICITY": {},
+            "INSULT": {},
+            "PROFANITY": {},
+            "IDENTITY_ATTACK": {}
+        }
     }
     
     response = requests.post(url, headers=headers, data=json.dumps(data))
     if response.status_code == 200:
         result = response.json()
-        score = result['attributeScores']['TOXICITY']['summaryScore']['value']
-        return score >= 0.5  # Adjust threshold based on moderation needs
+        flagged_categories = []
+        
+        # Threshold for flagging (adjust as needed)
+        threshold = 0.3
+        
+        # Check each attribute
+        if result['attributeScores']['TOXICITY']['summaryScore']['value'] >= threshold:
+            flagged_categories.append("TOXICITY")
+        if result['attributeScores']['INSULT']['summaryScore']['value'] >= threshold:
+            flagged_categories.append("INSULT")
+        if result['attributeScores']['PROFANITY']['summaryScore']['value'] >= threshold:
+            flagged_categories.append("PROFANITY")
+        if result['attributeScores']['IDENTITY_ATTACK']['summaryScore']['value'] >= threshold:
+            flagged_categories.append("IDENTITY_ATTACK")
+        
+        return flagged_categories  # Return a list of flagged categories
     else:
         print(f"Perspective API Error: {response.status_code}")
-        return False
+        return None
 
 # Function to perform translation without moderation
 def without_guardrails(text):
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  
+    response = openai.chat.completions.create(
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "Translate the following text to English."},
             {"role": "user", "content": text}
-        ],
-        temperature=0
+        ]
     )
-    result = response['choices'][0]['message']['content']
+    response_dict = response.to_dict()
+    result = response_dict['choices'][0]['message']['content']
     return result
+
 
 def main():
     st.title("Perspective API Implementation in LLMs")
@@ -62,11 +82,13 @@ def main():
 
             st.warning("Translation With Perspective Moderation")
 
-            # Check for profanity using Perspective API
-            if check_profanity_perspective(without_guardrails_result):
-                st.error("The content is flagged as toxic or containing profanity.")
+            # Check for flagged categories
+            flagged_categories = check_profanity_perspective(without_guardrails_result)
+            if flagged_categories:
+                for category in flagged_categories:
+                    st.error(f"The content is flagged as {category}.")
             else:
-                st.success("Validated Output: " + without_guardrails_result)
+                st.success("The content passed all moderation checks.")
 
 if __name__ == "__main__":
     main()

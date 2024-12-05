@@ -1,4 +1,7 @@
-alt-profanity-check
-openai
-guardrails-ai
+joblib
+better-profanity
+requests
+json
 python-dotenv
+streamlit
+openai
