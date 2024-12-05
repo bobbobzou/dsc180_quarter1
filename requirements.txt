@@ -1,8 +1,6 @@
-better_profanity==0.7.0
-guardrails==2.0.0
-joblib==1.4.2
-openai==1.56.2
-python-dotenv==1.0.1
-Requests==2.32.3
-rich==13.9.4
-streamlit==1.39.0
+joblib
+better_profanity
+requests
+dotenv
+streamlit
+openai
